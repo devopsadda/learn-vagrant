@@ -1,5 +1,9 @@
 # Let's Learn Vagrant
 ## Ansible Learning Materials
+https://developer.hashicorp.com/vagrant/docs
+https://manski.net/articles/vagrant/multi-machine-tutorial
+https://www.youtube.com/playlist?list=PLhW3qG5bs-L9S272lwi9encQOL9nMOnRa
+https://www.youtube.com/playlist?list=PLMWwct3_kb-358XZdnN66zb3HaU97DSQ0
 
 ## Learning notes - concepts
 ### Install Vagrant from the official website.
@@ -10,7 +14,7 @@ https://developer.hashicorp.com/vagrant/install?product_intent=vagrant
 ```shell
 vagrant --version
 cd centos7
-vagrant init
+vagrant init centos7
 vagrant up
 vagrant box list
 vagrant ssh
