@@ -1,0 +1,44 @@
+Vagrant.configure("2") do |config|
+  config.vm.define "ansible-master-node" do |subconfig|
+    subconfig.vm.box = "generic/centos7"
+    subconfig.vm.hostname = "ansible-master-node"
+    subconfig.vm.provider "virtualbox" do |vb|
+      vb.memory = "2048"
+      vb.name = "ansible-master-node"
+    end
+    subconfig.vm.provision "shell", inline: <<-SHELL
+      sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*
+      sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
+      yum clean all
+      yum update -y
+    SHELL
+  end
+  config.vm.define "ansible-node01" do |subconfig|
+    subconfig.vm.box = "generic/centos7"
+    subconfig.vm.hostname = "ansible-node01"
+    subconfig.vm.provider "virtualbox" do |vb|
+      vb.memory = "2048"
+      vb.name = "ansible-node01"
+    end
+    subconfig.vm.provision "shell", inline: <<-SHELL
+      sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*
+      sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
+      yum clean all
+      yum update -y
+    SHELL
+  end
+  config.vm.define "ansible-node02" do |subconfig|
+    subconfig.vm.box = "generic/centos7"
+    subconfig.vm.hostname = "ansible-node02"
+    subconfig.vm.provider "virtualbox" do |vb|
+      vb.memory = "2048"
+      vb.name = "ansible-node02"
+    end
+    subconfig.vm.provision "shell", inline: <<-SHELL
+      sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*
+      sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
+      yum clean all
+      yum update -y
+    SHELL
+  end
+end
