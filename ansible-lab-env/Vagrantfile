@@ -1,7 +1,14 @@
 Vagrant.configure("2") do |config|
+
+  config.vm.synced_folder ".", "/vagrant", disabled: true
+  config.vm.boot_timeout = 900
+
+  # Ansible Master Node
   config.vm.define "ansible-master-node" do |subconfig|
     subconfig.vm.box = "generic/centos7"
     subconfig.vm.hostname = "ansible-master-node"
+    subconfig.vm.network "private_network", ip: "192.168.10.11"
+    config.vm.synced_folder "./ansible/", "/home/vagrant/ansible", disabled: false
     subconfig.vm.provider "virtualbox" do |vb|
       vb.memory = "2048"
       vb.name = "ansible-master-node"
@@ -12,10 +19,18 @@ Vagrant.configure("2") do |config|
       yum clean all
       yum update -y
     SHELL
+    subconfig.vm.provision "shell", run: "always", inline: <<-SHELL
+      yum install epel-release
+      yum install ansible -y
+      echo "Hello, I am from the ansible-master-node, Setup Completed!"
+    SHELL
   end
+
+  # Ansible Node01
   config.vm.define "ansible-node01" do |subconfig|
     subconfig.vm.box = "generic/centos7"
     subconfig.vm.hostname = "ansible-node01"
+    subconfig.vm.network "private_network", ip: "192.168.10.12"
     subconfig.vm.provider "virtualbox" do |vb|
       vb.memory = "2048"
       vb.name = "ansible-node01"
@@ -26,10 +41,17 @@ Vagrant.configure("2") do |config|
       yum clean all
       yum update -y
     SHELL
+    subconfig.vm.provision "shell", path: "enable_ssh_password_auth.sh"
+    subconfig.vm.provision "shell", run: "always", inline: <<-SHELL
+      echo "Hello, I am from the ansible-node01, Setup Completed!"
+    SHELL
   end
+
+  # Ansible Node02
   config.vm.define "ansible-node02" do |subconfig|
     subconfig.vm.box = "generic/centos7"
     subconfig.vm.hostname = "ansible-node02"
+    subconfig.vm.network "private_network", ip: "192.168.10.13"
     subconfig.vm.provider "virtualbox" do |vb|
       vb.memory = "2048"
       vb.name = "ansible-node02"
@@ -39,6 +61,10 @@ Vagrant.configure("2") do |config|
       sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
       yum clean all
       yum update -y
+    SHELL
+    subconfig.vm.provision "shell", path: "enable_ssh_password_auth.sh"
+    subconfig.vm.provision "shell", run: "always", inline: <<-SHELL
+      echo "Hello, I am from the ansible-node02, Setup Completed!"
     SHELL
   end
 end
